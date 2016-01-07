@@ -70,20 +70,20 @@ for x in processedTr:
 	try:
 		dHold = {}
 		# append day
-		dHold.append(x[1][15:])
+		dHold["day"] = x[1][15:]
 		# append date
-		dHold.append(x[2][15:])
+		dHold["date"] = x[2][15:]
 		# append time
-		dHold.append(x[3][15:])
+		dHold["time"] = x[3][15:]
 		# append course name
-		dHold.append(x[4][3:])
+		dHold["course"] = x[4][3:]
 		# append teacher name
-		dHold.append(x[5][1:])
+		dHold["tName"] = x[5][1:]
 		finalTr.append(dHold)
 	except:
 		pass
 
 #testSplitTr()
 
-for x in finalTr[3]:
+for x in finalTr:
 	print x
