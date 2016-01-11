@@ -5,21 +5,16 @@ import re
 
 
 #URL = "http://timeplan.uia.no/swsuiav/XMLEngine/default.aspx?ModuleByWeek&p1=;IS-213-1;&p2=0;1;2;3;4;5;6;7;8;9;10;11;12;13;14;15;16;17;18;19;20;21;22;23"
-URL = "http://timeplan.uia.no/swsuiav/XMLEngine/default.aspx?ModuleByWeek&p1=;IS-211-1;&p2=0;1;2;3;4;5;6;7;8;9;10;11;12;13;14;15;16;17;18;19;20;21;22;23"
-
-response = requests.get(URL)
-
-soup = BeautifulSoup(response.text, 'html.parser')
-
-tr = soup.find_all('tr')
-
+URL = ["http://timeplan.uia.no/swsuiav/XMLEngine/default.aspx?ModuleByWeek&p1=;IS-211-1;&p2=0;1;2;3;4;5;6;7;8;9;10;11;12;13;14;15;16;17;18;19;20;21;22;23",
+		"http://timeplan.uia.no/swsuiav/XMLEngine/default.aspx?ModuleByWeek&p1=;IS-213-1;&p2=0;1;2;3;4;5;6;7;8;9;10;11;12;13;14;15;16;17;18;19;20;21;22;23"]
 
 def textDateToInt(txtDate):
 	for index, item in enumerate(calendar.month_name):
 		if item == txtDate:
 			return index
 
-# sort by value of date inside each hashmap inside
+
+# sort by value of date inside each dict inside
 # parent dict
 def sortByDate(list):
 	'''
@@ -28,62 +23,81 @@ def sortByDate(list):
 	for i in len(list):
 		return sorted(list, key=lambda list: list[i]["date"])
 
-splitTr = []
-processedTr = []
-finalTr = []
+multiTr = []
 
-for x in tr:
-	s = str(x).split("<td")
-	splitTr.append(s)
+for x in URL:
+	response = requests.get(x)
 
+	soup = BeautifulSoup(response.text, 'html.parser')
 
-# remove non-class tr
-for x in splitTr:
-	if (len(x) != 8):
-		splitTr.remove(x)
+	tr = soup.find_all('tr')
 
-# remove non-class tr not removed due to
-# in-loop indexerror
-for x in splitTr:
-	if (len(x) != 8):
-		splitTr.remove(x)
+	splitTr = []
+	processedTr = []
+	finalTr = []
 
-for x in splitTr:
-	temp = []
-	for y in x:
-		temp.append(y.replace("</td>", ""))
-	processedTr.append(temp)
-
-#for x in processedTr:
-#	print len(x)
-#for x in processedTr[0]:
-#	print "n"
-#	print x
+	for x in tr:
+		s = str(x).split("<td")
+		splitTr.append(s)
 
 
-for x in processedTr:
-	try:
-		dHold = {}
-		# append day
-		dHold["day"] = x[1][15:]
-		# append date
-		dHold["date"] = x[2][15:]
-		# append time
-		dHold["time"] = x[3][15:]
-		# append course name
-		dHold["course"] = x[4][2:]
-		# append room
-		dHold["room"] = x[5][1:]
-		# append teacher name
-		dHold["tName"] = x[6][1:]
-		finalTr.append(dHold)
-	except:
-		pass
+	# remove non-class tr
+	for x in splitTr:
+		if (len(x) != 8):
+			splitTr.remove(x)
 
-#testSplitTr()
+	# remove non-class tr not removed due to
+	# in-loop indexerror
+	for x in splitTr:
+		if (len(x) != 8):
+			splitTr.remove(x)
 
-#print finalTr[0]
-for i in range(len(finalTr)):
-	print ""
-	for x in finalTr[i]:
-		print x + ":", finalTr[i][x]
+	for x in splitTr:
+		temp = []
+		for y in x:
+			temp.append(y.replace("</td>", ""))
+		processedTr.append(temp)
+
+	for x in processedTr:
+		try:
+			dHold = {}
+			# append day
+			dHold["day"] = x[1][15:]
+			# append date
+			dHold["date"] = x[2][15:]
+			# append time
+			dHold["time"] = x[3][15:]
+			# append course name
+			dHold["course"] = x[4][2:]
+			# append room
+			dHold["room"] = x[5][1:]
+			# append teacher name
+			dHold["tName"] = x[6][1:]
+			finalTr.append(dHold)
+		except:
+			pass
+
+#	print finalTr
+	for x in finalTr:
+		multiTr.append(x)
+
+
+# print all lectures
+def unsortedPrint():
+	for i in range(len(multiTr)):
+		print ""
+		for x in multiTr[i]:
+			print x + ":", multiTr[i][x]
+
+# print sorted lectures
+def sortedPrint():
+	for i in range(len(multiTr)):
+		print ""
+		print "Date:", multiTr[i]['date']
+		print "Day:", multiTr[i]['day']
+		print "Time:", multiTr[i]['time']
+		print "Course:", multiTr[i]['course']
+		print "Room:", multiTr[i]['room']
+		print "Teacher:", multiTr[i]['tName']
+
+sortedPrint()
