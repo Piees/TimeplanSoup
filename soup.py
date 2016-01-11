@@ -19,6 +19,15 @@ def textDateToInt(txtDate):
 		if item == txtDate:
 			return index
 
+# sort by value of date inside each hashmap inside
+# parent dict
+def sortByDate(list):
+	'''
+	insert list containing hashmaps with a date value
+	'''
+	for i in len(list):
+		return sorted(list, key=lambda list: list[i]["date"])
+
 splitTr = []
 processedTr = []
 finalTr = []
@@ -74,6 +83,7 @@ for x in processedTr:
 #testSplitTr()
 
 #print finalTr[0]
-
-for x in finalTr:
-	print x
+for i in range(len(finalTr)):
+	print ""
+	for x in finalTr[i]:
+		print x + ":", finalTr[i][x]
