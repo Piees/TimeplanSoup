@@ -51,14 +51,19 @@ for x in URL:
 	splitTr = []
 	processedTr = []
 	finalTr = []
+	year = ""
 
 	for x in tr:
 		s = str(x).split("<td")
 		splitTr.append(s)
 
 
+
 	# remove non-class tr
 	for x in splitTr:
+		for y in x:
+			if re.search(".*Uke.*", y) != None:
+				year = y[y.index('Uke')+8:y.index('Uke')+12]
 		if (len(x) != 8):
 			splitTr.remove(x)
 
