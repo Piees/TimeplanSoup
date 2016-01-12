@@ -3,6 +3,7 @@ import calendar
 from bs4 import BeautifulSoup
 import re
 import sys
+import datetime
 
 URLDICT = {"is-211": "http://timeplan.uia.no/swsuiav/XMLEngine/default.aspx?ModuleByWeek&p1=;IS-211-1;&p2=0;1;2;3;4;5;6;7;8;9;10;11;12;13;14;15;16;17;18;19;20;21;22;23",
 			"is-213": "http://timeplan.uia.no/swsuiav/XMLEngine/default.aspx?ModuleByWeek&p1=;IS-213-1;&p2=0;1;2;3;4;5;6;7;8;9;10;11;12;13;14;15;16;17;18;19;20;21;22;23",
@@ -126,7 +127,56 @@ def sortedPrint():
 		print "Room:", multiTr[i]['room']
 		print "Teacher:", multiTr[i]['tName']
 
-sortedPrint()
 
+# print sorted select lectures
+def sortedSelectPrint(week):
+	for i in range(len(multiTr)):
+		iWeek = datetime.datetime(int(year), int(multiTr[i]['dateVal'][0]), int(multiTr[i]['dateVal'][1:])).isocalendar()[1]
+		if week == iWeek:
+			print ""
+			print "Date:", multiTr[i]['date']
+			print "Day:", multiTr[i]['day']
+			print "Time:", multiTr[i]['time']
+			print "Course:", multiTr[i]['course']
+			print "Room:", multiTr[i]['room']
+			print "Teacher:", multiTr[i]['tName']
+
+
+# return week number
+def currentWeek():
+	return datetime.datetime.today().isocalendar()[1]
+
+activeWeek = currentWeek()
+print activeWeek
+
+sortedSelectPrint(activeWeek)
+
+# print invalid course parameters
 for x in courseNotFound:
 	print "\nfant ikke fag", x
+
+if __name__ == "__main__":
+	print "-----------------"
+	print 'press p for previous week'
+	print 'press n for next week'
+	print 'press ctrl-c to exit'
+	while 1:
+		cmd = raw_input()
+		if cmd == "p":
+			if activeWeek > 1:
+				activeWeek -= 1
+				print "-----------------"
+				print "Week", activeWeek
+				sortedSelectPrint(activeWeek)
+			else:
+				sortedSelectPrint(activeWeek)
+				print "Can\'t find earlier weeks"
+		elif cmd == "n":
+			if activeWeek < 52:
+				activeWeek += 1
+				print "-----------------"
+				print "Week", activeWeek
+				sortedSelectPrint(activeWeek)
+			else:
+				sortedSelectPrint(activeWeek)
+				print "Can\'t find later weeks"
