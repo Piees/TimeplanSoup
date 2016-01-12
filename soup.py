@@ -2,12 +2,22 @@ import requests
 import calendar
 from bs4 import BeautifulSoup
 import re
+import sys
 
+URLDICT = {"is-211": "http://timeplan.uia.no/swsuiav/XMLEngine/default.aspx?ModuleByWeek&p1=;IS-211-1;&p2=0;1;2;3;4;5;6;7;8;9;10;11;12;13;14;15;16;17;18;19;20;21;22;23",
+			"is-213": "http://timeplan.uia.no/swsuiav/XMLEngine/default.aspx?ModuleByWeek&p1=;IS-213-1;&p2=0;1;2;3;4;5;6;7;8;9;10;11;12;13;14;15;16;17;18;19;20;21;22;23",
+			"me-108": "http://timeplan.uia.no/swsuiav/XMLEngine/default.aspx?ModuleByWeek&p1=;ME-108-1;&p2=0;1;2;3;4;5;6;7;8;9;10;11;12;13;14;15;16;17;18;19;20;21;22;23",
+			"tfl-119": "http://timeplan.uia.no/swsuiav/XMLEngine/default.aspx?ModuleByWeek&p1=;TFL119-1;&p2=0;1;2;3;4;5;6;7;8;9;10;11;12;13;14;15;16;17;18;19;20;21;22;23",
+			"is-309": "http://timeplan.uia.no/swsuiav/XMLEngine/default.aspx?ModuleByWeek&p1=;IS-309-1;&p2=0;1;2;3;4;5;6;7;8;9;10;11;12;13;14;15;16;17;18;19;20;21;22;23",
+			"is-113": "http://timeplan.uia.no/swsuiav/XMLEngine/default.aspx?ModuleByWeek&p1=;IS-113-1;&p2=0;1;2;3;4;5;6;7;8;9;10;11;12;13;14;15;16;17;18;19;20;21;22;23"}
+URL = []
 
-
-#URL = "http://timeplan.uia.no/swsuiav/XMLEngine/default.aspx?ModuleByWeek&p1=;IS-213-1;&p2=0;1;2;3;4;5;6;7;8;9;10;11;12;13;14;15;16;17;18;19;20;21;22;23"
-URL = ["http://timeplan.uia.no/swsuiav/XMLEngine/default.aspx?ModuleByWeek&p1=;IS-211-1;&p2=0;1;2;3;4;5;6;7;8;9;10;11;12;13;14;15;16;17;18;19;20;21;22;23",
-		"http://timeplan.uia.no/swsuiav/XMLEngine/default.aspx?ModuleByWeek&p1=;IS-213-1;&p2=0;1;2;3;4;5;6;7;8;9;10;11;12;13;14;15;16;17;18;19;20;21;22;23"]
+courseNotFound = []
+for x in sys.argv[1:]:
+	try:
+		URL.append(URLDICT[x])
+	except:
+		courseNotFound.append(x)
 
 def textDateToInt(txtDate):
 	for index, item in enumerate(calendar.month_name):
@@ -61,7 +71,7 @@ for x in URL:
 	for x in splitTr:
 		temp = []
 		for y in x:
-			temp.append(y.replace("</td>", ""))
+			temp.append(y.replace("</td>", "").replace("\t", "").replace("\n", ""))
 		processedTr.append(temp)
 
 	for x in processedTr:
@@ -112,3 +122,6 @@ def sortedPrint():
 		print "Teacher:", multiTr[i]['tName']
 
 sortedPrint()
+
+for x in courseNotFound:
+	print "\nfant ikke fag", x
