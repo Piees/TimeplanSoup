@@ -1,4 +1,5 @@
 import requests
+import calendar
 from bs4 import BeautifulSoup
 import re
 
@@ -10,7 +11,7 @@ URL = ["http://timeplan.uia.no/swsuiav/XMLEngine/default.aspx?ModuleByWeek&p1=;I
 
 def textDateToInt(txtDate):
 	for index, item in enumerate(calendar.month_name):
-		if item == txtDate:
+		if item[:3] == txtDate:
 			return index
 
 
@@ -20,8 +21,13 @@ def sortByDate(list):
 	'''
 	insert list containing hashmaps with a date value
 	'''
-	for i in len(list):
-		return sorted(list, key=lambda list: list[i]["date"])
+	fish = [] # temp name
+	for i in range(len(list)):
+		blue = list[i]
+		fish = sorted(list, key=lambda blue: blue["dateVal"])
+#		fish.append(sorted(list, key=lambda list: list[i]["dateVal"]))
+#	list.sort(key=lambda list: list[1]['dateVal'])
+	return fish
 
 multiTr = []
 
@@ -77,9 +83,14 @@ for x in URL:
 		except:
 			pass
 
-#	print finalTr
 	for x in finalTr:
 		multiTr.append(x)
+
+
+for x in multiTr:
+	x['dateVal'] = str(textDateToInt(x['date'][3:])) + x['date'][:2]
+
+multiTr = sortByDate(multiTr)
 
 
 # print all lectures
