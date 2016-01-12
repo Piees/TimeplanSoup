@@ -1,9 +1,17 @@
+# -*- coding: utf-8 -*-
 import requests
 import calendar
 from bs4 import BeautifulSoup
 import re
 import sys
 import datetime
+
+COURSES = {'is-211': 'Algoritmer og datastrukturer',
+			'is-213': 'Åpen kildekode programvare',
+			'is-309': 'Videregående databasesystemer',
+			'is-113': 'Læring med IT',
+			'tfl-119': 'IT og samfunnsendringer',
+			'me-108': 'Samfunnsvitenskaplig metode'}
 
 URLDICT = {"is-211": "http://timeplan.uia.no/swsuiav/XMLEngine/default.aspx?ModuleByWeek&p1=;IS-211-1;&p2=0;1;2;3;4;5;6;7;8;9;10;11;12;13;14;15;16;17;18;19;20;21;22;23",
 			"is-213": "http://timeplan.uia.no/swsuiav/XMLEngine/default.aspx?ModuleByWeek&p1=;IS-213-1;&p2=0;1;2;3;4;5;6;7;8;9;10;11;12;13;14;15;16;17;18;19;20;21;22;23",
@@ -134,9 +142,9 @@ def sortedSelectPrint(week):
 		iWeek = datetime.datetime(int(year), int(multiTr[i]['dateVal'][0]), int(multiTr[i]['dateVal'][1:])).isocalendar()[1]
 		if week == iWeek:
 			print ""
-			print "Date:", multiTr[i]['date']
-			print "Day:", multiTr[i]['day']
-			print "Time:", multiTr[i]['time']
+			print "Date:", multiTr[i]['day'] + multiTr[i]['date'], multiTr[i]['time']
+#			print "Day:", multiTr[i]['day']
+#			print "Time:", multiTr[i]['time']
 			print "Course:", multiTr[i]['course']
 			print "Room:", multiTr[i]['room']
 			print "Teacher:", multiTr[i]['tName']
@@ -149,17 +157,28 @@ def currentWeek():
 activeWeek = currentWeek()
 print activeWeek
 
-sortedSelectPrint(activeWeek)
+# print list of commands
+def listOfCommands():
+	print "----COMMANDS----"
+	print 'press p for previous week'
+	print 'press n for next week'
+	print 'press c for commands'
+	print 'press l for list of available courses'
+	print 'press ctrl-c to exit'
+
+# print list of available courses
+def listOfAvailableCourses():
+	print "---AVAILABLE COURSES---"
+	for k, v in COURSES.iteritems():
+		print k, v
 
 # print invalid course parameters
 for x in courseNotFound:
 	print "\nfant ikke fag", x
 
 if __name__ == "__main__":
-	print "-----------------"
-	print 'press p for previous week'
-	print 'press n for next week'
-	print 'press ctrl-c to exit'
+	sortedSelectPrint(activeWeek)
+	listOfCommands()
 	while 1:
 		cmd = raw_input()
 		if cmd == "p":
@@ -180,3 +199,7 @@ if __name__ == "__main__":
 			else:
 				sortedSelectPrint(activeWeek)
 				print "Can\'t find later weeks"
+		elif cmd == 'c':
+			listOfCommands()
+		elif cmd == 'l':
+			listOfAvailableCourses()
