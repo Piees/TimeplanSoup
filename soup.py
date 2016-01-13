@@ -21,6 +21,7 @@ URLDICT = {"is-211": "http://timeplan.uia.no/swsuiav/XMLEngine/default.aspx?Modu
 			"is-113": "http://timeplan.uia.no/swsuiav/XMLEngine/default.aspx?ModuleByWeek&p1=;IS-113-1;&p2=0;1;2;3;4;5;6;7;8;9;10;11;12;13;14;15;16;17;18;19;20;21;22;23"}
 URL = []
 
+# handle sys parameters
 courseNotFound = []
 for x in sys.argv[1:]:
 	try:
@@ -34,19 +35,13 @@ def textDateToInt(txtDate):
 			return index
 
 
-# sort by value of date inside each dict inside
-# parent dict
+# sort by value of date inside each dict inside parent dict
 def sortByDate(list):
-	'''
-	insert list containing hashmaps with a date value
-	'''
-	fish = [] # temp name
+	sort = []
 	for i in range(len(list)):
-		blue = list[i]
-		fish = sorted(list, key=lambda blue: blue["dateVal"])
-#		fish.append(sorted(list, key=lambda list: list[i]["dateVal"]))
-#	list.sort(key=lambda list: list[1]['dateVal'])
-	return fish
+		shortList = list[i]
+		sort = sorted(list, key=lambda shortList: shortList["dateVal"])
+	return sort
 
 multiTr = []
 
@@ -66,8 +61,6 @@ for x in URL:
 		s = str(x).split("<td")
 		splitTr.append(s)
 
-
-
 	# remove non-class tr
 	for x in splitTr:
 		for y in x:
@@ -85,7 +78,7 @@ for x in URL:
 	for x in splitTr:
 		temp = []
 		for y in x:
-			temp.append(y.replace("</td>", "").replace("\t", "").replace("\n", ""))
+			temp.append(y.replace("</td>", "").replace("\t", "").replace("\n", "").replace("\r", ""))
 		processedTr.append(temp)
 
 	for x in processedTr:
@@ -110,12 +103,10 @@ for x in URL:
 	for x in finalTr:
 		multiTr.append(x)
 
-
 for x in multiTr:
 	x['dateVal'] = str(textDateToInt(x['date'][3:])) + x['date'][:2]
 
 multiTr = sortByDate(multiTr)
-
 
 # print all lectures
 def unsortedPrint():
@@ -135,7 +126,6 @@ def sortedPrint():
 		print "Room:", multiTr[i]['room']
 		print "Teacher:", multiTr[i]['tName']
 
-
 # print sorted select lectures
 def sortedSelectPrint(week):
 	for i in range(len(multiTr)):
@@ -143,8 +133,6 @@ def sortedSelectPrint(week):
 		if week == iWeek:
 			print ""
 			print "Date:", multiTr[i]['day'] + multiTr[i]['date'], multiTr[i]['time']
-#			print "Day:", multiTr[i]['day']
-#			print "Time:", multiTr[i]['time']
 			print "Course:", multiTr[i]['course']
 			print "Room:", multiTr[i]['room']
 			print "Teacher:", multiTr[i]['tName']
@@ -155,11 +143,11 @@ def currentWeek():
 	return datetime.datetime.today().isocalendar()[1]
 
 activeWeek = currentWeek()
-print activeWeek
 
 # print list of commands
 def listOfCommands():
 	print "----COMMANDS----"
+	print 'press enter to execute command'.upper()
 	print 'press p for previous week'
 	print 'press n for next week'
 	print 'press c for commands'
