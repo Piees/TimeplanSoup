@@ -32,7 +32,10 @@ for x in sys.argv[1:]:
 def textDateToInt(txtDate):
 	for index, item in enumerate(calendar.month_name):
 		if item[:3] == txtDate:
-			return index
+			if len(str(index)) == 1:
+				return "0" + str(index)
+			else:
+				return str(index)
 
 
 # sort by value of date inside each dict inside parent dict
@@ -66,6 +69,7 @@ for x in URL:
 		for y in x:
 			if re.search(".*Uke.*", y) != None:
 				year = y[y.index('Uke')+8:y.index('Uke')+12]
+				break
 		if (len(x) != 8):
 			splitTr.remove(x)
 
@@ -104,7 +108,9 @@ for x in URL:
 		multiTr.append(x)
 
 for x in multiTr:
-	x['dateVal'] = str(textDateToInt(x['date'][3:])) + x['date'][:2]
+	print "fish"
+	print str(textDateToInt(x['date'][3:]))
+	x['dateVal'] = year + str(textDateToInt(x['date'][3:])) + x['date'][:2] + x['time'].split("-")[0].replace(".", "")
 
 multiTr = sortByDate(multiTr)
 
@@ -129,7 +135,7 @@ def sortedPrint():
 # print sorted select lectures
 def sortedSelectPrint(week):
 	for i in range(len(multiTr)):
-		iWeek = datetime.datetime(int(year), int(multiTr[i]['dateVal'][0]), int(multiTr[i]['dateVal'][1:])).isocalendar()[1]
+		iWeek = datetime.datetime(int(year), int(multiTr[i]['dateVal'][0]), int(multiTr[i]['dateVal'][1:3])).isocalendar()[1]
 		if week == iWeek:
 			print ""
 			print "Date:", multiTr[i]['day'] + multiTr[i]['date'], multiTr[i]['time']
@@ -167,6 +173,10 @@ for x in courseNotFound:
 if __name__ == "__main__":
 	sortedSelectPrint(activeWeek)
 	listOfCommands()
+	t = open('textsoup.txt', 'w')
+	t.truncate()
+	t.write(str(multiTr))
+	t.close()
 	while 1:
 		cmd = raw_input()
 		if cmd == "p":

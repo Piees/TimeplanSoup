@@ -1,0 +1,51 @@
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='main.css') }}">
+  </head>
+  <body>
+    <table>
+      <tr>
+        <td>
+          Day
+        </td>
+        <td>
+          Course
+        </td>
+        <td>
+          Date
+        </td>
+        <td>
+          Time
+        </td>
+        <td>
+          Room
+        </td>
+        <td>
+          Teacher Name
+        </td>
+        {% for x in courses %}
+        {% if  %}
+        <tr>
+          <td>
+            {{x['day']}}
+          </td>
+          <td>
+            {{x['course']}}
+          </td>
+          <td>
+            {{x['date']}}
+          </td>
+          <td>
+            {{x['time']}}
+          </td>
+          <td>
+            {{x['room'][:12]}}
+          </td>
+          <td>
+            {{x['tName'].decode('utf-8')}}
+          </td>
+        </tr>
+        {% endfor %}
+  </body>
+</html>
