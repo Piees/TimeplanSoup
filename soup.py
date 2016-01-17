@@ -108,8 +108,6 @@ for x in URL:
 		multiTr.append(x)
 
 for x in multiTr:
-	print "fish"
-	print str(textDateToInt(x['date'][3:]))
 	x['dateVal'] = year + str(textDateToInt(x['date'][3:])) + x['date'][:2] + x['time'].split("-")[0].replace(".", "")
 
 multiTr = sortByDate(multiTr)

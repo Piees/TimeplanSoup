@@ -25,8 +25,27 @@
           Teacher Name
         </td>
         {% for x in courses %}
-        {% if  %}
         <tr>
+          {% if x == nextLecture() %}
+          <td class=highlight>
+            {{x['day']}}
+          </td>
+          <td class=highlight>
+            {{x['course']}}
+          </td>
+          <td class=highlight>
+            {{x['date']}}
+          </td>
+          <td class=highlight>
+            {{x['time']}}
+          </td>
+          <td class=highlight>
+            {{x['room'][:12]}}
+          </td>
+          <td class=highlight>
+            {{x['tName'].decode('utf-8')}}
+          </td>
+          {% else %}
           <td>
             {{x['day']}}
           </td>
@@ -45,6 +64,7 @@
           <td>
             {{x['tName'].decode('utf-8')}}
           </td>
+          {% endif %}
         </tr>
         {% endfor %}
   </body>

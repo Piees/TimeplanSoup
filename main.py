@@ -34,7 +34,6 @@ def nextLecture():
     for x in courses:
         if int(x['dateVal']) >= int(int(today[0] + today[1] + today[2])):
             switch = True
-        print switch
         if switch and (x['dateVal'] != None):
             return x
 
@@ -58,7 +57,7 @@ def timeplanDiv():
 
 @app.route('/')
 def home():
-    return render_template('main.html', courses=courses)
+    return render_template('main.html', courses=courses, nextLecture = nextLecture)
 
 if __name__ == '__main__':
     app.run(debug=True)
