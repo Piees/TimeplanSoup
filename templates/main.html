@@ -39,7 +39,7 @@
             {{x['day']}}
           </td>
           <td class=highlight>
-            {{x['course']}}
+            {{x['course'].decode('utf-8')}}
           </td>
           <td class=highlight>
             {{x['date']}}
@@ -55,10 +55,10 @@
           </td>
           {% else %}
           <td>
-            {{x['day']}}
+            {{x['day'].decode('utf-8')}}
           </td>
           <td>
-            {{x['course']}}
+            {{x['course'].decode('utf-8')}}
           </td>
           <td>
             {{x['date']}}
@@ -67,7 +67,7 @@
             {{x['time']}}
           </td>
           <td>
-            {{x['room'][:10]}}
+            {{x['room'][:10].decode('utf-8')}}
           </td>
           <td>
             {{x['tName'].decode('utf-8')}}

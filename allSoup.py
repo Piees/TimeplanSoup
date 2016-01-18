@@ -3,6 +3,7 @@ import requests
 import calendar
 from bs4 import BeautifulSoup
 import re
+import ast
 import sys
 import datetime
 import urllib2
@@ -110,10 +111,19 @@ for x in URLDICT:
 t.write(']')
 t.close()
 
-for x in multiTr:
+with open('textsoup.txt', 'r') as courses:
+    courses = courses.read()
+
+courses = ast.literal_eval(courses)
+
+for x in courses:
 	x['dateVal'] = year + str(textDateToInt(x['date'][3:])) + x['date'][:2] + x['time'].split("-")[0].replace(".", "")
 
-multiTr = sortByDate(multiTr)
+t = open('textsoup.txt', 'w')
+t.truncate()
+
+# courses =
+t.write(str(sortByDate(courses)))
 
 # return week number
 def currentWeek():
