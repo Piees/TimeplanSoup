@@ -5,6 +5,8 @@ from bs4 import BeautifulSoup
 import re
 import sys
 import datetime
+import urllib2
+from seleniumtest import strElements
 
 COURSES = {'is-211': 'Algoritmer og datastrukturer',
 			'is-213': 'Åpen kildekode programvare',
@@ -19,7 +21,26 @@ URLDICT = {"is-211": "http://timeplan.uia.no/swsuiav/XMLEngine/default.aspx?Modu
 			"tfl-119": "http://timeplan.uia.no/swsuiav/XMLEngine/default.aspx?ModuleByWeek&p1=;TFL119-1;&p2=0;1;2;3;4;5;6;7;8;9;10;11;12;13;14;15;16;17;18;19;20;21;22;23",
 			"is-309": "http://timeplan.uia.no/swsuiav/XMLEngine/default.aspx?ModuleByWeek&p1=;IS-309-1;&p2=0;1;2;3;4;5;6;7;8;9;10;11;12;13;14;15;16;17;18;19;20;21;22;23",
 			"is-113": "http://timeplan.uia.no/swsuiav/XMLEngine/default.aspx?ModuleByWeek&p1=;IS-113-1;&p2=0;1;2;3;4;5;6;7;8;9;10;11;12;13;14;15;16;17;18;19;20;21;22;23"}
+
+for x in strElements:
+	URLDICT[x[:-2]] = "http://timeplan.uia.no/swsuiav/XMLEngine/default.aspx?ModuleByWeek&p1=;{};&p2=0;1;2;3;4;5;6;7;8;9;10;11;12;13;14;15;16;17;18;19;20;21;22;23".format(x)
+
 URL = []
+
+# return list of all course codes
+def acc():
+	response = requests.get('http://timeplan.uia.no/swsuiav/public/no/default.aspx')
+
+	fish = response.requests.get('javascript:__doPostBack(\'LinkBtn_modules\',\'\')')
+
+#	javascript:__doPostBack('LinkBtn_modules','')
+
+	soup = BeautifulSoup(response.text, 'html.parser')
+
+	str(soup).split('<option value=\"')
+
+	print soup
+
 
 # handle sys parameters
 courseNotFound = []
@@ -95,7 +116,7 @@ for x in URL:
 			# append time
 			dHold["time"] = x[3][15:]
 			# append course name
-			dHold["course"] = x[4][2:]
+			dHold["course"] = x[4][2:].split(' ', 1)[0]
 			# append room
 			dHold["room"] = x[5][1:]
 			# append teacher name
