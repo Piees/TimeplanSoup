@@ -11,7 +11,5 @@ for x in elements:
     temp = x.get_attribute('innerHTML').split(' ', 1)
     if len(temp[0]) > 5:
         if temp[0][1].isupper() and temp[0][len(temp[0])-3].isdigit():
-            strElements[temp[0]] = temp[1]
-for x in strElements:
-    print x
+            strElements[temp[0].lower()] = temp[1]
 browser.close()

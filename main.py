@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from flask import Flask, url_for, render_template
-import soup
+#import soup
 # string to dict module
 import ast
 import datetime
