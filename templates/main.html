@@ -32,7 +32,9 @@
         <th>
           Teacher Name
         </td>
+      </tr>
         {% for x in courses %}
+          {% if selected[0] == x['course'][:-2].lower() %}
         <tr>
           {% if x == nextLecture() %}
           <td class=highlight>
@@ -74,6 +76,7 @@
           </td>
           {% endif %}
         </tr>
+        {% endif %}
         {% endfor %}
   </body>
 </html>

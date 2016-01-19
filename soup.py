@@ -192,10 +192,10 @@ for x in courseNotFound:
 if __name__ == "__main__":
 	sortedSelectPrint(activeWeek)
 	listOfCommands()
-	t = open('textsoup.txt', 'w')
-	t.truncate()
-	t.write(str(multiTr))
-	t.close()
+#	t = open('textsoup.txt', 'w')
+#	t.truncate()
+#	t.write(str(multiTr))
+#	t.close()
 	while 1:
 		cmd = raw_input()
 		if cmd == "p":

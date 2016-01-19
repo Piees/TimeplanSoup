@@ -12,26 +12,21 @@ with open('textsoup.txt', 'r') as courses:
 
 courses = ast.literal_eval(courses)
 
-# to be deprecated
-def sortedPrint():
-    fish = []
-    dish = ""
-    for i in range(len(courses)):
-        fish.append(["<br><br>Date:", courses[i]['date'] + "<br>Day:", courses[i]['day'] +
-		"<br>Time:", courses[i]['time'] +
-		"<br>Course:", courses[i]['course'] +
-		"<br>Room:", courses[i]['room'] +
-		"<br>Teacher:", courses[i]['tName']])
-    for x in fish:
-        for i in x:
-            dish += i
-    return dish
+selected = ['is-213']
+
+selCourses = []
+
+for x in courses:
+    for y in selected:
+        if x['course'][:-2].lower() == y:
+            selCourses.append(x)
+
 
 def nextLecture():
     switch = False
     today = str(datetime.datetime.today()).replace(' ', '').replace(':', '').replace('.', '').split('-')
     today[2] = today[2][:6]
-    for x in courses:
+    for x in selCourses:
         if int(x['dateVal']) >= int(int(today[0] + today[1] + today[2])):
             switch = True
         if switch and (x['dateVal'] != None):
@@ -43,6 +38,11 @@ def nextLecture():
 #        return f.read().decode(charset)
 
 
+#print "HEI"
+#for x in courses:
+#    if x['course'] == 'is-211'
+#    print x['course']
+
 # timeplan div
 def timeplanDiv():
     div = ""
@@ -53,11 +53,10 @@ def timeplanDiv():
         div += temp
     return div
 
-#app.jinja_env.globals['timeplanDiv'] = timeplanDiv
-
 @app.route('/')
 def home():
-    return render_template('main.html', courses=courses, nextLecture = nextLecture)
+    return render_template('main.html', courses=courses, nextLecture = nextLecture, selected = selected)
 
 if __name__ == '__main__':
+#    app.run(debug=False, host="0.0.0.0")
     app.run(debug=True)
