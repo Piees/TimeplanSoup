@@ -12,11 +12,12 @@ with open('textsoup.txt', 'r') as courses:
 
 courses = ast.literal_eval(courses)
 
-selected = ['is-213']
+selected = ['is-213', 'is-211', 'is-110', 'is-202']
 
 selCourses = []
 
 for x in courses:
+    print x['course']
     for y in selected:
         if x['course'][:-2].lower() == y:
             selCourses.append(x)
@@ -30,7 +31,7 @@ def nextLecture():
         if int(x['dateVal']) >= int(int(today[0] + today[1] + today[2])):
             switch = True
         if switch and (x['dateVal'] != None):
-            return x
+            return x['dateVal']
 
 
 #def get_resource_as_string(name, charset='utf-8'):
