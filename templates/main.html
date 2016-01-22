@@ -4,6 +4,9 @@
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='main.css') }}">
   </head>
   <body>
+    <h1>
+      UiA Timeplan
+    </h1>
     <table>
       <tr>
         <th>
@@ -36,7 +39,7 @@
         {% for x in courses %}
           {% if selected[0] == x['course'][:-2].lower() %}
         <tr>
-          {% if x == nextLecture() %}
+          {% if x['dateVal'] == nextLecture() %}
           <td class=highlight>
             {{x['day']}}
           </td>
