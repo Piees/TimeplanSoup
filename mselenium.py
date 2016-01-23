@@ -18,10 +18,10 @@ codes = {}
 for x in range(len(ecode)):
     tempFCode = eFullCode[x].get_attribute('href').split('?')[0]
     tempFCodeFrom = tempFCode.index('topic')+6
-    temp = {ecode[x].get_attribute('innerHTML'): {
+    temp = {tempFCode[tempFCodeFrom:]: {
     'title': etitle[x].get_attribute('innerHTML'),
     'location': eloc[x].get_attribute('innerHTML')[:-5],
-    'fullCode': tempFCode[tempFCodeFrom:]
+    'strippedCode': ecode[x].get_attribute('innerHTML')
     }}
     codes.update(temp)
 
