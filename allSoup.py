@@ -85,23 +85,27 @@ for x in URLDICT:
 		processedTr.append(temp)
 
 	for y in processedTr:
-		try:
-			dHold = {}
-			# append day
-			dHold["day"] = y[1][15:]
-			# append date
-			dHold["date"] = y[2][15:]
-			# append time
-			dHold["time"] = y[3][15:]
-			# append course name
-			dHold["course"] = x#x[4][2:].split(' ', 1)[0]
-			# append room
-			dHold["room"] = y[5][1:]
-			# append teacher name
-			dHold["tName"] = y[6][1:]
-			finalTr.append(dHold)
-		except:
-			pass
+		if len(y) == 8:
+			try:
+				dHold = {}
+				# append day
+				if len(y[1][15:]) == 4:
+					dHold["day"] = y[1][15:]
+				# append date
+				dHold["date"] = y[2][15:]
+				# append time
+				dHold["time"] = y[3][15:]
+				# append course name
+				dHold["course"] = x
+				# append room
+				dHold["room"] = y[5][1:]
+				# append teacher name
+				dHold["tName"] = y[6][1:]
+				# test
+				dHold['dateVal'] = year + str(textDateToInt(dHold['date'][3:])) + dHold['date'][:2] + dHold['time'].split("-")[0].replace(".", "")
+				finalTr.append(dHold)
+			except:
+				print "except"
 
 	for x in finalTr:
 		t.write(str(x) + ',')
@@ -119,7 +123,7 @@ for x in courses:
 t = open('textsoup.txt', 'w')
 t.truncate()
 
-# courses =
+# courses
 t.write(str(sortByDate(courses)))
 
 # return week number
@@ -129,8 +133,4 @@ def currentWeek():
 activeWeek = currentWeek()
 
 if __name__ == "__main__":
-#    t = open('textsoup.txt', 'w')
-#    t.truncate()
-#    t.write(str(multiTr))
-#    t.close()
     print "Wrote to file"
