@@ -20,19 +20,19 @@ for x in courses:
         if x['course'].lower() == y:
             selCourses.append(x)
 
-for x in selCourses:
-    print 'selcourses'
-    print x
 
 def nextLecture():
     switch = False
     today = str(datetime.datetime.today()).replace(' ', '').replace(':', '').replace('.', '').split('-')
     today[2] = today[2][:6]
     for x in selCourses:
+        print x['dateVal']
+        print int(today[0] + today[1] + today[2])
         if int(x['dateVal']) >= int(int(today[0] + today[1] + today[2])):
             switch = True
         if switch and (x['dateVal'] != None):
             return x['dateVal']
+
 
 # timeplan div
 def timeplanDiv():
@@ -43,6 +43,7 @@ def timeplanDiv():
         temp += "</td><td>" + str(x['room'])[:15] + "</td><td>" + str(x['tName'])
         div += temp
     return div
+
 
 @app.route('/')
 def home():
