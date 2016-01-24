@@ -17,11 +17,14 @@ selected = ['is-213', 'is-211', 'is-110', 'is-202']
 selCourses = []
 
 for x in courses:
-    print x['course']
+#    print x['course']
     for y in selected:
-        if x['course'][:-2].lower() == y:
+        if x['course'].lower() == y:
             selCourses.append(x)
 
+for x in selCourses:
+    print 'selcourses'
+    print x
 
 def nextLecture():
     switch = False
@@ -56,7 +59,7 @@ def timeplanDiv():
 
 @app.route('/')
 def home():
-    return render_template('main.html', courses=courses, nextLecture = nextLecture, selected = selected)
+    return render_template('main.html', selCourses=selCourses, nextLecture = nextLecture, selected = selected)
 
 if __name__ == '__main__':
 #    app.run(debug=False, host="0.0.0.0")

@@ -36,15 +36,15 @@
           Teacher Name
         </td>
       </tr>
-        {% for x in courses %}
-          {% if selected[0] == x['course'][:-2].lower() %}
+        {% for x in selCourses %}
+          {% if x['course'].lower() in selected %}
         <tr>
           {% if x['dateVal'] == nextLecture() %}
           <td class=highlight>
             {{x['day']}}
           </td>
           <td class=highlight>
-            {{x['course'].decode('utf-8')}}
+            {{x['course']}}
           </td>
           <td class=highlight>
             {{x['date']}}
@@ -63,7 +63,7 @@
             {{x['day'].decode('utf-8')}}
           </td>
           <td>
-            {{x['course'].decode('utf-8')}}
+            {{x['course']}}
           </td>
           <td>
             {{x['date']}}
