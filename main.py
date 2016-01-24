@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from flask import Flask, url_for, render_template
-#import soup
 # string to dict module
 import ast
 import datetime
@@ -17,7 +16,6 @@ selected = ['is-213', 'is-211', 'is-110', 'is-202']
 selCourses = []
 
 for x in courses:
-#    print x['course']
     for y in selected:
         if x['course'].lower() == y:
             selCourses.append(x)
@@ -35,17 +33,6 @@ def nextLecture():
             switch = True
         if switch and (x['dateVal'] != None):
             return x['dateVal']
-
-
-#def get_resource_as_string(name, charset='utf-8'):
-#    with app.open_resource(name) as f:
-#        return f.read().decode(charset)
-
-
-#print "HEI"
-#for x in courses:
-#    if x['course'] == 'is-211'
-#    print x['course']
 
 # timeplan div
 def timeplanDiv():
