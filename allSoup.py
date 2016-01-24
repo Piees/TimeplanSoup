@@ -64,19 +64,20 @@ for x in URLDICT:
 		splitTr.append(s)
 
 	# remove non-class tr
-	for i in splitTr:
-		for y in i:
-			if re.search(".*Uke.*", y) != None:
-				year = y[y.index('Uke')+8:y.index('Uke')+12]
-				break
-			if (len(i) != 8):
-				splitTr.remove(i)
+	if year == "":
+		for i in splitTr:
+			for y in i:
+				if re.search(".*Uke.*", y) != None:
+					year = y[y.index('Uke')+8:y.index('Uke')+12]
+					break
+#			if (len(i) != 8):
+#				splitTr.remove(i)
 
 	# remove non-class tr not removed due to
 	# in-loop indexerror
-	for i in splitTr:
-		if (len(i) != 8):
-			splitTr.remove(i)
+#	for i in splitTr:
+#		if (len(i) != 8):
+#			splitTr.remove(i)
 
 	for i in splitTr:
 		temp = []
@@ -102,6 +103,7 @@ for x in URLDICT:
 				# append teacher name
 				dHold["tName"] = y[6][1:]
 				# test
+#				print year + str(textDateToInt(dHold['date'][3:])) + dHold['date'][:2] + dHold['time'].split("-")[0].replace(".", "")
 				dHold['dateVal'] = year + str(textDateToInt(dHold['date'][3:])) + dHold['date'][:2] + dHold['time'].split("-")[0].replace(".", "")
 				finalTr.append(dHold)
 			except:
@@ -117,8 +119,8 @@ with open('textsoup.txt', 'r') as courses:
 
 courses = ast.literal_eval(courses)
 
-for x in courses:
-	x['dateVal'] = year + str(textDateToInt(x['date'][3:])) + x['date'][:2] + x['time'].split("-")[0].replace(".", "")
+#for x in courses:
+#	x['dateVal'] = year + str(textDateToInt(x['date'][3:])) + x['date'][:2] + x['time'].split("-")[0].replace(".", "")
 
 t = open('textsoup.txt', 'w')
 t.truncate()
