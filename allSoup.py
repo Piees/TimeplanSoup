@@ -7,20 +7,16 @@ import ast
 import sys
 import datetime
 import urllib2
-from seleniumtest import strElements
-
-COURSES = {'is-211': 'Algoritmer og datastrukturer',
-			'is-213': 'Åpen kildekode programvare',
-			'is-309': 'Videregående databasesystemer',
-			'is-113': 'Læring med IT',
-			'tfl-119': 'IT og samfunnsendringer',
-			'me-108': 'Samfunnsvitenskaplig metode'}
 
 URLDICT = {}
 
-print strElements
-for x in strElements:
-	URLDICT[x[:-2]] = "http://timeplan.uia.no/swsuiav/XMLEngine/default.aspx?ModuleByWeek&p1=;{};&p2=0;1;2;3;4;5;6;7;8;9;10;11;12;13;14;15;16;17;18;19;20;21;22;23".format(x)
+with open('coursecodes.txt', 'r') as coursecodes:
+    coursecodes = coursecodes.read()
+
+coursecodes = ast.literal_eval(coursecodes)
+
+for x in coursecodes:
+	URLDICT[coursecodes[x]['strippedCode']] = "http://timeplan.uia.no/swsuiav/XMLEngine/default.aspx?ModuleByWeek&p1=;{};&p2=0;1;2;3;4;5;6;7;8;9;10;11;12;13;14;15;16;17;18;19;20;21;22;23".format(x)
 
 def textDateToInt(txtDate):
 	for index, item in enumerate(calendar.month_name):
