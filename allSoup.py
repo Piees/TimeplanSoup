@@ -18,6 +18,7 @@ coursecodes = ast.literal_eval(coursecodes)
 for x in coursecodes:
 	URLDICT[coursecodes[x]['strippedCode']] = "http://timeplan.uia.no/swsuiav/XMLEngine/default.aspx?ModuleByWeek&p1=;{};&p2=0;1;2;3;4;5;6;7;8;9;10;11;12;13;14;15;16;17;18;19;20;21;22;23".format(x)
 
+
 def textDateToInt(txtDate):
 	for index, item in enumerate(calendar.month_name):
 		if item[:3] == txtDate:
@@ -41,11 +42,11 @@ t = open('textsoup.txt', 'w')
 t.truncate()
 t.write('[')
 
-i = 1
+k = 1
 
 for x in URLDICT:
-	print str(i) + "/" + str(len(URLDICT))
-	i += 1
+	print str(k) + "/" + str(len(URLDICT))
+	k += 1
 
 	response = requests.get(URLDICT[x])
 
@@ -58,46 +59,46 @@ for x in URLDICT:
 	finalTr = []
 	year = ""
 
-	for x in tr:
-		s = str(x).split("<td")
+	for i in tr:
+		s = str(i).split("<td")
 		splitTr.append(s)
 
 	# remove non-class tr
-	for x in splitTr:
-		for y in x:
+	for i in splitTr:
+		for y in i:
 			if re.search(".*Uke.*", y) != None:
 				year = y[y.index('Uke')+8:y.index('Uke')+12]
 				break
-			if (len(x) != 8):
-				splitTr.remove(x)
+			if (len(i) != 8):
+				splitTr.remove(i)
 
 	# remove non-class tr not removed due to
 	# in-loop indexerror
-	for x in splitTr:
-		if (len(x) != 8):
-			splitTr.remove(x)
+	for i in splitTr:
+		if (len(i) != 8):
+			splitTr.remove(i)
 
-	for x in splitTr:
+	for i in splitTr:
 		temp = []
-		for y in x:
+		for y in i:
 			temp.append(y.replace("</td>", "").replace("\t", "").replace("\n", "").replace("\r", ""))
 		processedTr.append(temp)
 
-	for x in processedTr:
+	for y in processedTr:
 		try:
 			dHold = {}
 			# append day
-			dHold["day"] = x[1][15:]
+			dHold["day"] = y[1][15:]
 			# append date
-			dHold["date"] = x[2][15:]
+			dHold["date"] = y[2][15:]
 			# append time
-			dHold["time"] = x[3][15:]
+			dHold["time"] = y[3][15:]
 			# append course name
-			dHold["course"] = x[4][2:].split(' ', 1)[0]
+			dHold["course"] = x#x[4][2:].split(' ', 1)[0]
 			# append room
-			dHold["room"] = x[5][1:]
+			dHold["room"] = y[5][1:]
 			# append teacher name
-			dHold["tName"] = x[6][1:]
+			dHold["tName"] = y[6][1:]
 			finalTr.append(dHold)
 		except:
 			pass
