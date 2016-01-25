@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from flask import Flask, url_for, render_template, request, make_response
+from flask import Flask, url_for, render_template, request, make_response, redirect
 # string to dict module
 import ast
 import datetime
@@ -11,12 +11,13 @@ with open('textsoup.txt', 'r') as courses:
 
 courses = ast.literal_eval(courses)
 
-#selected = ['is-213', 'is-211', 'is-110', 'is-202']
 selected = []
 
 selCourses = []
 
 def updateCourses():
+    global selCourses
+    selCourses = []
     try:
         for x in courses:
             for y in selected:
@@ -32,10 +33,11 @@ def nextLecture():
     today[2] = today[2][:6]
     for x in selCourses:
 #        print x['dateVal']
-#        print int(today[0] + today[1] + today[2])
+#        print 'today',int(today[0] + today[1] + today[2])
         if int(x['dateVal']) >= int(int(today[0] + today[1] + today[2])):
             switch = True
         if switch and (x['dateVal'] != None):
+#            print x['dateVal']
             return x['dateVal']
 
 
@@ -52,12 +54,17 @@ def timeplanDiv():
 
 @app.route('/', methods=['POST', 'GET'])
 def home():
+    global nextLectureVar
+    global selected
+    selected = []
+    selected.append(request.cookies.get('cookieCourse'))
+    updateCourses()
     if request.method == 'POST':
-        resp = make_response(render_template('main.html', selCourses=selCourses, nextLecture = nextLecture, selected = request.cookies.get('cookieCourse')))
-        global selected
-        selected = []
+        resp = make_response(redirect(url_for('home')))
         if len(request.form['activeCourses']) > 0:
-            resp.set_cookie('cookieCourse', request.form['activeCourses'])
+            global selected
+            selected = []
+            resp.set_cookie('cookieCourse', request.form['activeCourses'] + '#')
             selected.append(request.form['activeCourses'])
         updateCourses()
         return resp
@@ -66,7 +73,8 @@ def home():
         selected = []
         selected.append(request.cookies.get('cookieCourse'))
         updateCourses()
-    return render_template('main.html', selCourses=selCourses, nextLecture = nextLecture, selected = request.cookies.get('cookieCourse'))
+    nextLectureVar = nextLecture()
+    return render_template('main.html', selCourses=selCourses, nextLecture = nextLectureVar, selected = request.cookies.get('cookieCourse'))
 
 if __name__ == '__main__':
 #    app.run(debug=False, host="0.0.0.0")
