@@ -45,7 +45,7 @@
         {% for x in selCourses %}
           {% if x['course'].lower() in selected %}
         <tr>
-          {% if x['dateVal'] == nextLecture() %}
+          {% if x['dateVal'] == nextLecture %}
           <td class=highlight>
             {{x['day']}}
           </td>
