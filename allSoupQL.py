@@ -35,12 +35,13 @@ def createTable():
                         times VARCHAR(14) NOT NULL,
                         course VARCHAR(14) NOT NULL,
                         room VARCHAR(64) NOT NULL,
-                        tName VARCHAR(64) NOT NULL,
-                        dateVal VARCHAR(14) NOT NULL)''')
-        print 'SUCSESFULLY CREATED TABLE'
+                        tName VARCHAR(64) NULL,
+                        dateVal VARCHAR(14) NOT NULL,
+                        location VARCHAR(124) NOT NULL,
+                        title VARCHAR(164) NOT NULL)''')
+        print 'SUCCESSFULLY CREATED TABLE'
     except mysql.connector.Error as err:
         print("Failed creating database: {}".format(err))
-        #exit(1)
 
 createTable()
 
@@ -52,9 +53,7 @@ with open('coursecodes.txt', 'r') as coursecodes:
 coursecodes = ast.literal_eval(coursecodes)
 
 for x in coursecodes:
-    URLDICT[coursecodes[x]['strippedCode']] = "http://timeplan.uia.no/swsuiav/XMLEngine/default.aspx?ModuleByWeek&p1=;{};&p2=0;1;2;3;4;5;6;7;8;9;10;11;12;13;14;15;16;17;18;19;20;21;22;23".format(x)
-
-#URLDICT['is-211'] = 'http://timeplan.uia.no/swsuiav/XMLEngine/default.aspx?ModuleByWeek&p1=;IS-211-1;&p2=0;1;2;3;4;5;6;7;8;9;10;11;12;13;14;15;16;17;18;19;20;21;22;23'
+    coursecodes[x]['URL'] = "http://timeplan.uia.no/swsuiav/XMLEngine/default.aspx?ModuleByWeek&p1=;{};&p2=0;1;2;3;4;5;6;7;8;9;10;11;12;13;14;15;16;17;18;19;20;21;22;23".format(x)
 
 def textDateToInt(txtDate):
     for index, item in enumerate(calendar.month_name):
@@ -77,11 +76,11 @@ multiTr = []
 
 k = 1
 
-for x in URLDICT:
-    print str(k) + "/" + str(len(URLDICT))
+for x in coursecodes:
+    print str(k) + "/" + str(len(coursecodes)) + ' ' + str(round(float(k) / len(coursecodes), 4) * 100.00) + '% completed'
     k += 1
 
-    response = requests.get(URLDICT[x])
+    response = requests.get(coursecodes[x]['URL'])
 
     soup = BeautifulSoup(response.text, 'html.parser')
 
@@ -115,36 +114,32 @@ for x in URLDICT:
             try:
                 dHold = {}
                 # append day
-                if len(y[1][15:]) == 4:
-                    dHold["day"] = y[1][15:]
+                #if len(y[1][15:]) == 4:
+                dHold["day"] = y[1][15:]
                 # append date
                 dHold["dates"] = y[2][15:]
                 # append time
                 dHold["times"] = y[3][15:]
                 # append course name
-                dHold["course"] = x
+                dHold["course"] = coursecodes[x]['strippedCode']
                 # append room
                 dHold["room"] = y[5][1:]
                 # append teacher name
                 dHold["tName"] = y[6][1:]
+                # append date value
                 dHold['dateVal'] = year + str(textDateToInt(dHold['dates'][3:])) + dHold['dates'][:2] + dHold['times'].split("-")[0].replace(".", "")
-                #cursor.execute("INSERT INTO Courses VALUES ({},{},{},{},{},{},{})".format(dHold['day'], dHold['date'], dHold['time'], dHold['course'],dHold['room'], dHold['tName'], dHold['dateVal']))
-                cursor.execute("INSERT INTO Courses VALUES (%(day)s, %(dates)s, %(times)s, %(course)s, %(room)s, %(tName)s, %(dateVal)s)", dHold)
-                print 'insert successfull'
-            except:# mysql.connector.Error as err:
-#                print("Failed creating database: {}".format(err))
-                print "except" # + str(sys.exc_info()[0])
-                t.write(str(y) + "\n")
-#                except mysql.connector.Error as err:
-#                    print("Failed creating database: {}".format(err))
-#                   exit(1)
+                # append location
+                dHold['location'] = coursecodes[x]['location']
+                # append title
+                dHold['title'] = coursecodes[x]['title']
+                cursor.execute("INSERT INTO Courses VALUES (%(day)s, %(dates)s, %(times)s, %(course)s, %(room)s, %(tName)s, %(dateVal)s, %(location)s, %(title)s)", dHold)
+            except:
+                print "except" + str(sys.exc_info())
+                print dHold['location']
+                print dHold['title']
+                t.write(str(y) + str(sys.exc_info()) + "\n")
 
 cnect.commit()
-# return week number
-def currentWeek():
-    return datetime.datetime.today().isocalendar()[1]
-
-activeWeek = currentWeek()
 
 if __name__ == "__main__":
-    print "Wrote to file"
+    print "Created Table and inserted values"
