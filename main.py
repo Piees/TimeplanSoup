@@ -51,31 +51,34 @@ def timeplanDiv():
         div += temp
     return div
 
+def dictToString(dictStr):
+    return dictStr.join('|')
+
+def stringToDict(strDict):
+    return strDict.split('|')
 
 @app.route('/', methods=['POST', 'GET'])
 def home():
     global nextLectureVar
     global selected
-    selected = []
-    selected.append(request.cookies.get('cookieCourse'))
+    selected = stringToDict(request.cookies.get('cookieCourse'))
     updateCourses()
     if request.method == 'POST':
         resp = make_response(redirect(url_for('home')))
         if len(request.form['activeCourses']) > 0:
             global selected
             selected = []
-            resp.set_cookie('cookieCourse', request.form['activeCourses'] + '#')
+            resp.set_cookie('cookieCourse', request.form['activeCourses'] + '|' + request.form['activeCourses2'] + '|' + request.form['activeCourses3'] + '|' + request.form['activeCourses4'] + '|')
             selected.append(request.form['activeCourses'])
         updateCourses()
         return resp
     if request.method == 'GET':
         global selected
-        selected = []
-        selected.append(request.cookies.get('cookieCourse'))
+        selected = stringToDict(request.cookies.get('cookieCourse'))
         updateCourses()
     nextLectureVar = nextLecture()
     return render_template('main.html', selCourses=selCourses, nextLecture = nextLectureVar, selected = request.cookies.get('cookieCourse'))
 
 if __name__ == '__main__':
-#    app.run(debug=False, host="0.0.0.0")
-    app.run(debug=True)
+    app.run(debug=False, host="0.0.0.0")
+#    app.run(debug=True)

@@ -2,6 +2,17 @@
 	background: #ffff99 !important;
 }
 
+ul {
+	background-color: rgba(200, 200, 200, 0.9);
+	width: 8%;
+	border-style:groove;
+	border-width: 2px;
+}
+
+li:hover {
+	color: red;
+}
+
 h1 {
   text-shadow: 0 1px 0 #ccc,
                0 2px 0 #c9c9c9,
