@@ -1,0 +1,15 @@
+#ignoring compiled python files. 
+*.pyc
+
+
+#ignoring xml files created by pycharm. 
+*.xml
+#ignoring iml files. 
+*.iml
+
+#ignoring the iml folder created by pycharm. 
+.idea/
+
+errorlog.txt
+
+*.idea/
